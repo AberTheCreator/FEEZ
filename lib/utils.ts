@@ -81,3 +81,35 @@ export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null
+  
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), wait)
+  }
+}
+
+export function generateRandomTokenURI(tokenId: number): string {
+  const traits = [
+    'Cosmic', 'Digital', 'Neon', 'Crystal', 'Ethereal', 'Quantum', 
+    'Cyber', 'Holographic', 'Prismatic', 'Luminous'
+  ]
+  const types = [
+    'Artifact', 'Gem', 'Orb', 'Shard', 'Token', 'Essence', 
+    'Core', 'Fragment', 'Catalyst', 'Matrix'
+  ]
+  
+  const trait = traits[Math.floor(Math.random() * traits.length)]
+  const type = types[Math.floor(Math.random() * types.length)]
+  
+  return JSON.stringify({
+    name: `${trait} ${type} #${tokenId}`,
+    description: `A unique ${trait.toLowerCase()} ${type.toLowerCase()} minted through Feez`,
+    image: `https://api.feez.app/images/${tokenId}.png`,
+    attributes: [
+      { trait_type: "Type", value: type },
+      { trait_type: "Rarity", value: trait },
+      { trait_type: "Minted Via", value: "Feez" }
+    ]
+  })
+}
